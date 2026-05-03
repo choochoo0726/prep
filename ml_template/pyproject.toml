@@ -1,0 +1,21 @@
+[project]
+name = "ml-template"
+version = "0.1.0"
+description = "Interview-ready ML pipeline template: ElasticNet + LightGBM with SHAP feature selection"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel>=7.2.0",
+    "jupyter>=1.1.1",
+    "kaleido>=1.2.0",
+    "lightgbm>=4.6.0",
+    "matplotlib>=3.10.9",
+    "nbformat>=5.10.4",
+    "optuna>=4.8.0",
+    "plotly>=6.7.0",
+    "polars>=1.40.1",
+    "pyarrow>=24.0.0",
+    "scikit-learn>=1.8.0",
+    "shap>=0.51.0",
+    "tabpfn>=7.1.1",
+]
