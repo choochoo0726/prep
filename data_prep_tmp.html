@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>data_prep.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="alternative-data-preparation-and-evaluation">Alternative Data Preparation and Evaluation</h1>
+<h1 id="另类数据的准备与评估">另类数据的准备与评估</h1>
+<p>This document outlines key considerations for evaluating, preparing, and handling alternative datasets in a quantitative research environment.
+本文概述了在量化研究环境中评估、准备和处理另类数据集的关键注意事项。</p>
+<hr>
+<h2 id="i-vendor-evaluation-questions-the-due-diligence-phase">I. Vendor Evaluation Questions: The Due Diligence Phase</h2>
+<h2 id="一-供应商评估问题尽职调查阶段">一、 供应商评估问题：尽职调查阶段</h2>
+<p>Before touching the data, you must evaluate the structural integrity and legal safety of the dataset.
+在接触数据之前，必须评估数据集的结构完整性和法律安全性。</p>
+<h3 id="1-data-integrity-and-lineage">1. Data Integrity and Lineage</h3>
+<h3 id="1-数据完整性与溯源">1. 数据完整性与溯源</h3>
+<ul>
+<li><strong>What is the primary source of the data?</strong> Is it direct-from-source (e.g., credit card exhaust from a bank), web-scraped, or aggregated from third-party apps? Aggregated data is highly vulnerable to &quot;inorganic&quot; panel shocks if the vendor loses a sub-supplier.
+<ul>
+<li><strong>数据的核心来源是什么？</strong> 是直接源数据（例如银行的信用卡流水）、网页抓取，还是从第三方 App 汇总的？如果供应商失去了一个子供应商，汇总型数据非常容易受到“非自然”样本池冲击的影响。</li>
+<li><em>💡 Real-World Example:</em> A vendor aggregating credit card data from multiple banks suddenly loses a contract with Chase. If you don't know the lineage, your model will mistakenly interpret the massive drop in transaction volume as a severe macroeconomic recession.</li>
+<li><em>💡 现实案例：</em> 一个汇总多家银行信用卡数据的供应商突然失去了与大通银行（Chase）的合同。如果你不知道数据溯源，你的模型会错误地将交易量的巨大下降解释为严重的宏观经济衰退。</li>
+</ul>
+</li>
+<li><strong>Compliance and PII (Personally Identifiable Information):</strong> Does the dataset contain toxic PII? Has it been properly anonymized? If it’s web-scraped, does it violate the target site's Terms of Service? Trading on non-compliant data introduces massive legal and reputational risk.
+<ul>
+<li><strong>合规性与 PII（个人身份信息）：</strong> 数据集是否包含敏感的 PII？是否经过了妥善的去标识化处理？如果是网页抓取，是否违反了目标网站的服务条款？基于不合规数据进行交易会带来巨大的法律和声誉风险。</li>
+</ul>
+</li>
+<li><strong>Restatements and Revisions:</strong> If the vendor changes a data point post-facto (e.g., a merchant reclassifies a transaction 30 days later), how is that flagged? You must ensure your backtest only uses data that was <em>actually known</em> on that historical date.
+<ul>
+<li><strong>重述与修订：</strong> 如果供应商事后更改了某个数据点（例如，商户在 30 天后对某笔交易进行了重新分类），该如何标记？你必须确保你的回测只使用在该历史日期<em>实际上已知</em>的数据。</li>
+<li><em>💡 Real-World Example:</em> A vendor restates an entire quarter of retail sales because a major retailer changed how they report returns. If your backtest uses the restated data, you have &quot;Look-Ahead Bias,&quot; trading on information that was impossible to know at the time.</li>
+<li><em>💡 现实案例：</em> 由于一家主要零售商更改了退货报告方式，供应商重述了整个季度的零售额。如果你的回测使用了重述后的数据，你就产生了“未来函数（Look-Ahead Bias）”，即利用了当时不可能知道的信息进行交易。</li>
+</ul>
+</li>
+<li><strong>Point-in-Time (PiT) vs. Event-Time:</strong> Does the timestamp reflect when the event occurred (Event-Time) or when the data was actually published to a subscriber's FTP/API (PiT)? Using Event-Time in a backtest creates fatal <strong>Look-Ahead Bias</strong>.
+<ul>
+<li><strong>时间点 (PiT) vs. 事件时间：</strong> 时间戳反映的是事件发生的时间（事件时间），还是数据实际发布到订阅者 FTP/API 的时间（PiT）？在回测中使用事件时间会导致致命的<strong>未来函数偏差</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-methodology-and-pre-processing">2. Methodology and Pre-processing</h3>
+<h3 id="2-方法论与预处理">2. 方法论与预处理</h3>
+<ul>
+<li><strong>Pre-Smoothing:</strong> Are they applying outlier detection or normalization before you get the data? You need to know if they are clipping &quot;noise&quot; that might actually be a valid macroeconomic signal.
+<ul>
+<li><strong>预平滑处理：</strong> 在你拿到数据之前，供应商是否应用了离群值检测或归一化？你需要知道他们是否剪掉了可能实际上是有效宏观信号的“噪音”。</li>
+</ul>
+</li>
+<li><strong>Survivorship Bias:</strong> Does the dataset include companies that have gone bankrupt or been acquired, or is it only currently active tickers? If bankrupt companies are dropped, historical performance will look artificially inflated.
+<ul>
+<li><strong>生存者偏差：</strong> 数据集是否包含已破产或被收购的公司，还是仅包含当前活跃的股票？如果剔除了破产公司，历史表现看起来会虚高。</li>
+<li><em>💡 Real-World Example:</em> If you are testing a signal on App Store downloads and the vendor deletes historical data for apps that were banned last year, your model will falsely conclude that every app in the historical dataset was a long-term winner.</li>
+<li><em>💡 现实案例：</em> 如果你在测试 App Store 下载量信号，而供应商删除了去年被封禁的 App 的历史数据，你的模型会错误地得出结论，认为历史数据集中的每个 App 都是长期的赢家。</li>
+</ul>
+</li>
+<li><strong>Mapping and Corporate Actions:</strong> How do they map raw data to tradable entities (e.g., mapping a specific subsidiary's brand name to a parent company's FIGI/Ticker)? Furthermore, do they automatically adjust historical data for M&amp;A, spin-offs, or ticker changes?
+<ul>
+<li><strong>映射与公司行为：</strong> 他们如何将原始数据映射到可交易实体（例如，将特定子公司的品牌名称映射到母公司的 FIGI/股票代码）？此外，他们是否会自动根据并购（M&amp;A）、拆分或更名调整历史数据？</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="ii-data-preparation-techniques-cleaning-the-signal">II. Data Preparation Techniques: Cleaning the Signal</h2>
+<h2 id="二-数据准备技术清洗信号">二、 数据准备技术：清洗信号</h2>
+<h3 id="1-handling-panel-instability">1. Handling Panel Instability</h3>
+<h3 id="1-处理样本池panel的不稳定性">1. 处理样本池（Panel）的不稳定性</h3>
+<p>Alternative data panels rarely represent a stable population. Users churn, and vendors sign new partnerships.
+另类数据的样本池很少能代表一个稳定的群体。用户会流失，供应商也会签署新的合作伙伴。</p>
+<ul>
+<li><strong>Cohort-Based Filtering:</strong> Create a &quot;fixed cohort&quot; of users active for a minimum continuous period. This removes the noise of users onboarding or abandoning the platform.
+<ul>
+<li><strong>基于同类群组（Cohort）的过滤：</strong> 创建一个在最短连续时间内保持活跃的“固定群组”。这可以消除用户加入或退出平台带来的噪音。</li>
+<li><strong>Formula:</strong> $C = {i : \text{active}(i, \tau) \in \text{Panel}, \forall \tau \in [t-k, t]}$</li>
+<li><em>💡 Real-World Example:</em> Instead of looking at &quot;Total Amazon Purchases&quot; (which naturally grows as the vendor adds more users to the panel), you look only at the subset of 50,000 users who have been in the panel for exactly 24 continuous months, tracking whether <em>their</em> spending behavior is changing.</li>
+<li><em>💡 现实案例：</em> 与其观察“亚马逊总购买量”（这会随着供应商向样本池添加更多用户而自然增长），不如只观察连续 24 个月都在样本池中的 50,000 名用户的子集，跟踪<em>他们的</em>消费行为是否在发生变化。</li>
+</ul>
+</li>
+<li><strong>Panel Normalization (Market-Share Method):</strong> Divide the metric of interest by a &quot;control&quot; metric to get a ratio that is independent of panel size fluctuations.
+<ul>
+<li><strong>样本池归一化（市场份额法）：</strong> 将关注的指标除以一个“对照”指标，得到一个独立于样本池规模波动的比率。</li>
+<li><strong>Formula:</strong> $M_{i,t} = \frac{X_{i,t}}{\sum_{j \in \text{Panel}} X_{j,t}}$</li>
+<li><em>💡 Real-World Example:</em> If the vendor's total panel size drops by 20%, both Uber and Lyft recorded rides will instantly drop. But if you track the ratio <code>Uber Rides / (Uber Rides + Lyft Rides)</code>, this &quot;market share&quot; metric remains stable despite the panel volatility.</li>
+<li><em>💡 现实案例：</em> 如果供应商的总样本池规模下降了 20%，Uber 和 Lyft 记录的行程都会立即下降。但如果你追踪 <code>Uber 行程 / (Uber 行程 + Lyft 行程)</code> 这一比例，尽管样本池波动，这个“市场份额”指标仍会保持稳定。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-removing-geographical-and-demographic-bias">2. Removing Geographical and Demographic Bias</h3>
+<h3 id="2-消除地理和人口统计偏差">2. 消除地理和人口统计偏差</h3>
+<ul>
+<li><strong>Reweighting via Ground Truth:</strong> Compare your panel’s distribution to a ground-truth source (like the U.S. Census or BLS data) and apply corrective weights.
+<ul>
+<li><strong>通过基准事实（Ground Truth）重新加权：</strong> 将你的样本池分布与基准事实源（如美国人口普查或劳工统计局数据）进行比较，并应用修正权重。</li>
+<li><strong>Formula:</strong> $w_g = \frac{P(\text{Group}_g | \text{Census})}{P(\text{Group}_g | \text{Panel})}$</li>
+<li><em>💡 Real-World Example:</em> If your mobile location panel is 40% from New York and California (but they are only ~20% of the actual US population), you must downweight those coastal pings to accurately forecast a national retailer like Walmart.</li>
+<li><em>💡 现实案例：</em> 如果你的移动定位样本池中有 40% 来自纽约和加利福尼亚（但他们仅占美国实际人口的约 20%），你必须降低这些沿海地区的权重，才能准确预测像沃尔玛这样的全国性零售商。</li>
+</ul>
+</li>
+<li><strong>Regional De-averaging:</strong> Build separate regional sub-signals and aggregate them based on actual economic weighting, rather than letting coastal urban centers dominate the signal.
+<ul>
+<li><strong>区域去平均化：</strong> 构建独立的区域子信号，并根据实际经济权重进行汇总，而不是让沿海城市中心主导信号。</li>
+<li><strong>Formula:</strong> $\hat{S}<em>{\text{aggregate}} = \sum</em>{r} \beta_r \cdot \text{Normalize}(S_r)$</li>
+</ul>
+</li>
+<li><strong>Propensity Score Matching (PSM):</strong> Run a logistic regression to calculate the probability ($e$) that a person is in your dataset given their traits ($X$). Use this to select a subset of users that perfectly mirrors the national average.
+<ul>
+<li><strong>倾向评分匹配 (PSM)：</strong> 运行逻辑回归以计算在给定特征 ($X$) 的情况下，一个人出现在你的数据集中的概率 ($e$)。利用这一概率选择一个能完美反映全国平均水平的用户子集。</li>
+<li><strong>Formula:</strong> $e(X) = P(D=1 | X)$</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="iii-risks-of-reweighting-alternative-datasets">III. Risks of Reweighting Alternative Datasets</h2>
+<h2 id="三-另类数据重新加权的风险">三、 另类数据重新加权的风险</h2>
+<p>Reweighting is a dangerous mathematical hammer. If pushed too hard, you destroy alpha.
+重新加权是一把危险的数学之锤。如果用力过猛，你会摧毁 Alpha。</p>
+<h3 id="1-variance-inflation-and-effective-sample-size-ess">1. Variance Inflation and Effective Sample Size (ESS)</h3>
+<h3 id="1-方差膨胀与有效样本量-ess">1. 方差膨胀与有效样本量 (ESS)</h3>
+<ul>
+<li><strong>The Math:</strong> $\text{Var}(\hat{Y}) = \sum w_i^2 \text{Var}(y_i)$. Large weights $w_i$ (applied to severely under-represented groups) exponentially increase the estimator's variance.
+<ul>
+<li><strong>数学原理：</strong> $\text{Var}(\hat{Y}) = \sum w_i^2 \text{Var}(y_i)$。较大的权重 $w_i$（应用于代表性严重不足的群体）会呈指数级增加估计量的方差。</li>
+</ul>
+</li>
+<li><strong>The Diagnostic (ESS):</strong> You must calculate the Effective Sample Size to know if you've destroyed your data.
+<ul>
+<li><strong>诊断 (ESS)：</strong> 你必须计算有效样本量，以确定你是否破坏了数据。</li>
+<li><strong>Formula:</strong> $\text{ESS} = \frac{(\sum w_i)^2}{\sum w_i^2}$</li>
+<li><em>Rule of Thumb:</em> If your ESS drops below 30% of your actual panel size after reweighting, your weights are too extreme. Your signal is now driven by a tiny handful of heavily-weighted users.</li>
+<li><em>经验法则：</em> 如果重新加权后你的 ESS 降至实际样本池规模的 30% 以下，说明你的权重过于极端。你的信号现在仅由极少数权重极高的用户驱动。</li>
+<li><em>💡 Real-World Example (The &quot;Small Cell&quot; Problem):</em> Your panel has only 5 people from Rural North Dakota, but they need a $50x$ weight to match the Census. If one of those 5 people buys a new tractor on their credit card, your model, multiplying that by 50, might falsely predict a massive national surge in John Deere sales.</li>
+<li><em>💡 现实案例（“小单元”问题）：</em> 你的样本池中只有 5 人来自北达科他州农村，但他们需要 50 倍的权重才能匹配人口普查数据。如果这 5 人中有一个人用信用卡买了一台新拖拉机，你的模型将其乘以 50，可能会错误地预测约翰迪尔（John Deere）在全国范围内的销量将出现巨大增长。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-dimension-interdependency-the-whack-a-mole-effect">2. Dimension Interdependency (The &quot;Whack-a-Mole&quot; Effect)</h3>
+<h3 id="2-维度间依赖打地鼠效应">2. 维度间依赖（“打地鼠”效应）</h3>
+<ul>
+<li><strong>The Conflict:</strong> Reweighting for Geography may inadvertently worsen Income bias, because those variables are highly correlated.
+<ul>
+<li><strong>冲突：</strong> 为地理因素重新加权可能会无意中加剧收入偏差，因为这些变量高度相关。</li>
+<li><em>💡 Real-World Example:</em> You reweight your panel to have more 18-24 year olds to match the Census. But in your specific dataset, the 18-24 year olds happen to be wealthy software engineers. By &quot;fixing&quot; the Age bias, you accidentally created a massive Income bias.</li>
+<li><em>💡 现实案例：</em> 你为了匹配人口普查数据而重新加权样本池以增加 18-24 岁的人数。但在你的特定数据集中，18-24 岁的人恰好是富裕的软件工程师。通过“修复”年龄偏差，你意外地造成了巨大的收入偏差。</li>
+</ul>
+</li>
+<li><strong>The Solution (Raking):</strong> Quants use <strong>Iterative Proportional Fitting (Raking)</strong> to iteratively adjust weights until multiple marginal distributions (e.g., Age, Income, Geo) simultaneously match the Census. However, this dramatically increases the risk of over-fitting.
+<ul>
+<li><strong>解决方案 (Raking)：</strong> 量化研究员使用**迭代比例拟合（Raking）**来迭代调整权重，直到多个边缘分布（如年龄、收入、地理）同时匹配人口普查数据。然而，这会显著增加过拟合的风险。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="iv-seasonality-removal-frameworks-a-practitioners-guide">IV. Seasonality Removal Frameworks: A Practitioner's Guide</h2>
+<h2 id="四-季节性剔除框架实践指南">四、 季节性剔除框架：实践指南</h2>
+<p>When removing seasonality from alternative data, you are making a fundamental bet on what is &quot;normal&quot; and what is &quot;alpha.&quot;
+在从另类数据中剔除季节性时，你实际上是在对什么是“常态”、什么是“Alpha”进行根本性的博弈。</p>
+<h3 id="1-year-over-year-yoy-differencing">1. Year-Over-Year (YoY) Differencing</h3>
+<h3 id="1-同比-yoy-差分">1. 同比 (YoY) 差分</h3>
+<p>The &quot;Retail Heuristic&quot; and most common industry baseline.
+“零售启发法”，也是最常见的行业基准。</p>
+<ul>
+<li><strong>How to Use it:</strong> Apply log-differencing ($\log(Y_t) - \log(Y_{t-s})$). Always use a &quot;Base Check&quot;: If $Y_{t-s}$ is an outlier (check its Z-score), flag the resulting growth rate as unreliable.
+<ul>
+<li><strong>使用方法：</strong> 应用对数差分 ($\log(Y_t) - \log(Y_{t-s})$)。务必进行“基数检查”：如果 $Y_{t-s}$ 是离群值（检查其 Z-score），则将得出的增长率标记为不可靠。</li>
+</ul>
+</li>
+<li><strong>Why it is Good:</strong> Zero parameterization, no convergence issues, and stakeholder alignment.
+<ul>
+<li><strong>优点：</strong> 无参数化、无收敛问题，且易于与利益相关者达成共识。</li>
+</ul>
+</li>
+<li><strong>Best Problem Profile:</strong> Short histories (&lt; 24 months) and Sanity Checks (&quot;Floor&quot; model).
+<ul>
+<li><strong>最佳应用场景：</strong> 历史数据较短（&lt; 24 个月）和合理性检查（“底线”模型）。</li>
+<li><em>💡 Real-World Example:</em> Home Depot saw a massive, one-time spike in sales in April 2020 due to pandemic lockdowns. In April 2021, the YoY growth rate was deeply negative. If you didn't check the &quot;Base Effect&quot; of 2020, you would have falsely assumed Home Depot's business was collapsing in 2021.</li>
+<li><em>💡 现实案例：</em> 由于疫情封锁，家得宝（Home Depot）在 2020 年 4 月出现了大规模的一次性销售激增。在 2021 年 4 月，其同比增长率为深度负值。如果你不检查 2020 年的“基数效应”，你可能会错误地认为家得宝的业务在 2021 年正在崩溃。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-stl-decomposition-seasonal-trend-using-loess">2. STL Decomposition (Seasonal-Trend using LOESS)</h3>
+<h3 id="2-stl-分解-基于-loess-的季节趋势分解">2. STL 分解 (基于 LOESS 的季节趋势分解)</h3>
+<p>The &quot;Visualizer’s Choice&quot; for slowly evolving seasonal patterns.
+处理缓慢演变的季节性模式的“可视化首选”。</p>
+<ul>
+<li><strong>How to Use it:</strong> Tweak the <code>seasonal.window</code> (LOESS filter width). Use <code>robust=True</code> to ensure shocks don't bleed into the trend.
+<ul>
+<li><strong>使用方法：</strong> 调整 <code>seasonal.window</code>（LOESS 过滤器宽度）。使用 <code>robust=True</code> 以确保冲击不会渗入趋势中。</li>
+</ul>
+</li>
+<li><strong>Why it is Good:</strong> Flexibility to handle &quot;evolving&quot; peaks (e.g., e-commerce shifts) and handles additive/multiplicative seamlessly via log transforms.
+<ul>
+<li><strong>优点：</strong> 能够灵活处理“演变中”的峰值（例如电子商务的转变），并通过对数变换无缝处理加法/乘法模型。</li>
+</ul>
+</li>
+<li><strong>Best Problem Profile:</strong> Long-Term Thematic Trading and Visual Alpha Discovery.
+<ul>
+<li><strong>最佳应用场景：</strong> 长期主题交易和可视化 Alpha 发现。</li>
+<li><em>💡 Real-World Example:</em> Ten years ago, the peak holiday shopping week was strictly Black Friday. Today, it has shifted earlier into early November due to &quot;Cyber Month&quot; promotions. STL with a small <code>seasonal.window</code> dynamically adapts to this slow multi-year shift, whereas YoY assumes the pattern is perfectly static.</li>
+<li><em>💡 现实案例：</em> 十年前，假日的购物高峰周严格限定在“黑色星期五”。如今，由于“网络月”促销活动，这一高峰已提前至 11 月初。带有较小 <code>seasonal.window</code> 的 STL 能够动态适应这种缓慢的跨年转变，而 YoY 则假设这种模式是完全静态的。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-x-13arima-seats">3. X-13ARIMA-SEATS</h3>
+<p>The &quot;Econometric Standard&quot; for high-precision macro and banking data.
+高精度宏观和银行数据的“计量经济学标准”。</p>
+<ul>
+<li><strong>How to Use it:</strong> Specify &quot;Trading Day&quot; regressors and run &quot;Sliding Spans&quot; diagnostics.
+<ul>
+<li><strong>使用方法：</strong> 指定“交易日”回归量并运行“滑动跨度（Sliding Spans）”诊断。</li>
+</ul>
+</li>
+<li><strong>Why it is Good:</strong> Calendar Precision (adjusts for the number of weekends in a month) and Benchmark Fidelity (matches government methodology).
+<ul>
+<li><strong>优点：</strong> 日历精确度（调整一个月中周末的数量）和基准忠实度（符合政府统计方法）。</li>
+</ul>
+</li>
+<li><strong>Best Problem Profile:</strong> High-Volume Transaction Data and Macro-Leading Indicators.
+<ul>
+<li><strong>最佳应用场景：</strong> 大量交易数据和宏观领先指标。</li>
+<li><em>💡 Real-World Example:</em> March 2024 has 5 Fridays, 5 Saturdays, and 5 Sundays. March 2023 had only 4 of each. A restaurant chain's credit card transactions will look artificially high in 2024 simply due to the calendar. X-13ARIMA applies a &quot;Trading Day Penalty&quot; to mathematically neutralize this artifact.</li>
+<li><em>💡 现实案例：</em> 2024 年 3 月有 5 个周五、5 个周六和 5 个周日。而 2023 年 3 月每种只有 4 个。仅仅因为日历原因，一家连锁餐厅在 2024 年的信用卡交易额看起来会虚高。X-13ARIMA 会应用“交易日惩罚”来从数学上抵消这种人工痕迹。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-prophet-generalized-additive-model">4. Prophet (Generalized Additive Model)</h3>
+<h3 id="4-prophet-广义相加模型">4. Prophet (广义相加模型)</h3>
+<p>The &quot;Data Scientist’s Tool&quot; for messy, high-frequency, real-world data.
+处理杂乱、高频、现实世界数据的“数据科学家工具”。</p>
+<ul>
+<li><strong>How to Use it:</strong> Add custom <code>holidays</code> dataframes and tune the <code>changepoint_prior_scale</code>.
+<ul>
+<li><strong>使用方法：</strong> 添加自定义 <code>holidays</code> 数据框并调整 <code>changepoint_prior_scale</code>。</li>
+</ul>
+</li>
+<li><strong>Why it is Good:</strong> Native Gap Handling and Multi-Frequency modeling (daily/weekly/yearly simultaneously).
+<ul>
+<li><strong>优点：</strong> 原生支持缺失值处理，以及多频率建模（同时处理日/周/年周期）。</li>
+</ul>
+</li>
+<li><strong>Best Problem Profile:</strong> Messy web/app traffic data and Event-Driven Trading.
+<ul>
+<li><strong>最佳应用场景：</strong> 杂乱的网页/App 流量数据和事件驱动交易。</li>
+<li><em>💡 Real-World Example:</em> Predicting daily server traffic for a streaming service. You know traffic drops every Tuesday, spikes every Friday, plummets on July 4th, and you have 3 random days of missing data from a server outage last month. Prophet handles the multiple cycles, the known holiday, and the missing data natively.</li>
+<li><em>💡 现实案例：</em> 预测流媒体服务的每日服务器流量。你已知流量每周二下降，每周五飙升，7 月 4 日骤降，并且上个月由于服务器故障有 3 天数据随机丢失。Prophet 可以原生处理多个周期、已知假日和缺失数据。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="v-isolating-and-trading-on-innovation">V. Isolating and Trading on &quot;Innovation&quot;</h2>
+<h2 id="五-隔离创新innovation并据此交易">五、 隔离“创新（Innovation）”并据此交易</h2>
+<p>By removing trend and seasonality, you perform a <strong>Whitening Transformation</strong> to isolate the <strong>Innovation</strong> (Shock).
+通过剔除趋势和季节性，你执行了<strong>白化变换（Whitening Transformation）</strong>，以隔离出“创新”（即冲击）。</p>
+<h3 id="1-mathematical-definition">1. Mathematical Definition</h3>
+<h3 id="1-数学定义">1. 数学定义</h3>
+<p>$$Y_t = \text{Known}_t + \text{Innovation}_t$$
+The Innovation ($\epsilon_t$) is the unexpected &quot;Information Flow&quot; not yet priced in by the market.
+“创新” ($\epsilon_t$) 是尚未被市场定价的意外“信息流”。</p>
+<h3 id="2-transient-vs-structural-innovation">2. Transient vs. Structural Innovation</h3>
+<h3 id="2-瞬态-vs-结构性创新">2. 瞬态 vs. 结构性创新</h3>
+<ul>
+<li><strong>Transient:</strong> Residual spikes. These mean-revert quickly.
+<ul>
+<li><strong>瞬态：</strong> 残余的尖峰。这些会迅速均值回归。</li>
+<li><em>💡 Real-World Example:</em> A severe winter storm freezes a major logistics hub for a week. Shipments plummet. This is a transient shock—the packages will simply be shipped next week, causing a positive spike that cancels the negative one out.</li>
+<li><em>💡 现实案例：</em> 一场严重的暴风雪导致主要的物流枢纽停摆一周。出货量骤降。这是一个瞬态冲击——包裹只需在下周发出，产生的正向激增会抵消之前的负向冲击。</li>
+</ul>
+</li>
+<li><strong>Structural:</strong> Trend acceleration (the second derivative of the trend). This suggests a fundamental regime shift in market share or consumer behavior.
+<ul>
+<li><strong>结构性：</strong> 趋势加速（趋势的二阶导数）。这暗示了市场份额或消费者行为发生了根本性的系统性转变（Regime Shift）。</li>
+<li><em>💡 Real-World Example:</em> A major competitor files for bankruptcy. Your target company's shipments jump 10% and stay there permanently. This is a structural innovation—a permanent regime shift.</li>
+<li><em>💡 现实案例：</em> 一个主要竞争对手申请破产。你的目标公司的出货量跳升了 10% 并永久保持在那里。这是一个结构性创新——永久性的系统转变。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-advanced-extraction-removing-autocorrelation">3. Advanced Extraction (Removing Autocorrelation)</h3>
+<h3 id="3-高级提取剔除自相关">3. 高级提取（剔除自相关）</h3>
+<p>Even after removing seasonality, time-series data often has &quot;momentum&quot; (autocorrelation). You must remove this to find the <em>true</em> surprise.
+即使剔除了季节性，时间序列数据通常仍具有“动量”（自相关）。你必须剔除这一点才能找到<em>真正的</em>惊喜。</p>
+<ul>
+<li><strong>AR Filtering:</strong> Fit an Autoregressive model of order $p$:
+$$\epsilon_t = Y_t - (\phi_1 Y_{t-1} + \dots + \phi_p Y_{t-p})$$</li>
+<li><strong>Choosing $p$:</strong> Use the Partial Autocorrelation Function (PACF) or minimize the Akaike Information Criterion (AIC) to select how many lag periods to subtract. The remaining $\epsilon_t$ is pure, unadulterated alpha.
+<ul>
+<li><strong>选择 $p$：</strong> 使用偏自相关函数（PACF）或最小化赤池信息准则（AIC）来选择要减去多少个滞后周期。剩下的 $\epsilon_t$ 就是纯净、未被掺杂的 Alpha。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-dynamic-extraction-via-kalman-filters-state-space-innovation">4. Dynamic Extraction via Kalman Filters (State-Space Innovation)</h3>
+<h3 id="4-通过卡尔曼滤波进行动态提取状态空间创新">4. 通过卡尔曼滤波进行动态提取（状态空间创新）</h3>
+<p>The <strong>Kalman Filter</strong> is the premier tool for quantitative, real-time extraction of innovations. Unlike STL or moving averages, which are &quot;backward-looking,&quot; a Kalman Filter is a recursive algorithm that maintains an internal &quot;state&quot; of the system and continuously updates its beliefs as new data arrives.
+**卡尔曼滤波（Kalman Filter）**是实时量化提取创新的首选工具。与 STL 或移动平均线这种“滞后”的方法不同，卡尔曼滤波是一种递归算法，它维护系统的内部“状态”，并随着新数据的到来不断更新其信念。</p>
+<ul>
+<li>
+<p><strong>The Core Assumption:</strong> The underlying &quot;true&quot; trend ($x_t$) is unobservable (hidden) and evolves over time with some system noise. What we actually observe ($y_t$) is this true trend corrupted by measurement noise (e.g., scraping errors, daily jitter).</p>
+<ul>
+<li><strong>核心假设：</strong> 底层的“真实”趋势 ($x_t$) 是不可观测的（隐藏的），并随着某些系统噪声而演变。我们实际观察到的是被测量噪声（如抓取错误、每日波动）干扰后的真实趋势 ($y_t$)。</li>
+</ul>
+</li>
+<li>
+<p><strong>The Mathematical Formulation:</strong></p>
+<ul>
+<li><strong>State Equation (The Hidden Reality):</strong> $x_t = A \cdot x_{t-1} + w_t$ (where $w_t \sim N(0, Q)$ is the process noise).</li>
+<li><strong>Measurement Equation (What We See):</strong> $y_t = H \cdot x_t + v_t$ (where $v_t \sim N(0, R)$ is the measurement noise).</li>
+</ul>
+</li>
+<li>
+<p><strong>The Innovation ($\epsilon_t$):</strong> The Kalman Filter makes a prediction for tomorrow ($\hat{y}_t$). When tomorrow's actual data ($y_t$) arrives, the difference is the <strong>Innovation</strong> (or Measurement Residual):
+$$\epsilon_t = y_t - \hat{y}_t$$
+<em>If this innovation is consistently positive over several days, the Kalman Filter automatically adjusts its hidden state ($x_t$) upward, realizing this is a structural shift, not just noise.</em></p>
+<ul>
+<li><strong>创新 ($\epsilon_t$)：</strong> 卡尔曼滤波会对明天做出预测 ($\hat{y}_t$)。当明天实际数据 ($y_t$) 到来时，两者的差值就是<strong>创新</strong>（或测量残差）：$\epsilon_t = y_t - \hat{y}_t$。<em>如果这种创新连续几天均为正值，卡尔曼滤波会自动向上调整其隐藏状态 ($x_t$)，意识到这是一个结构性转变，而非仅仅是噪声。</em></li>
+</ul>
+</li>
+<li>
+<p><strong>Best Problem Profile:</strong> High-frequency, real-time trading environments (MFT/HFT) where you need to detect structural regime shifts <em>before</em> a traditional rolling average catches up.</p>
+<ul>
+<li><strong>最佳应用场景：</strong> 高频、实时交易环境（MFT/HFT），在这种环境下，你需要在传统的滚动平均线反应过来<em>之前</em>检测到结构性系统转变。</li>
+<li><em>💡 Real-World Example:</em> You track hourly satellite data of parking lot cars at Walmart. The data is extremely noisy (clouds, sensor glitches). A Kalman Filter maintains a &quot;true expected volume.&quot; If a massive promotion drives a sudden 30% spike in cars, the Kalman Filter's prediction error ($\epsilon_t$) spikes instantly, generating a tradable signal on day one, whereas a 14-day rolling average would barely move.</li>
+<li><em>💡 现实案例：</em> 你追踪沃尔玛停车场汽车的每小时卫星数据。数据噪音极大（云层、传感器故障）。卡尔曼滤波维护一个“真实预期量”。如果一场大规模促销活动导致汽车数量突然激增 30%，卡尔曼滤波的预测误差 ($\epsilon_t$) 会立即飙升，在第一天就产生可交易的信号，而 14 天滚动平均线几乎不会波动。</li>
+</ul>
+</li>
+<li>
+<p><strong>Python Implementation (<code>pykalman</code>):</strong></p>
+</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> pykalman <span class="hljs-keyword">import</span> KalmanFilter
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">extract_kalman_innovation</span>(<span class="hljs-params">series</span>):
+    <span class="hljs-string">&quot;&quot;&quot;
+    使用一维卡尔曼滤波平滑序列并提取创新项。
+    &quot;&quot;&quot;</span>
+    <span class="hljs-comment"># 初始化一个基础的随机游走卡尔曼滤波</span>
+    kf = KalmanFilter(
+        transition_matrices=[<span class="hljs-number">1</span>],
+        observation_matrices=[<span class="hljs-number">1</span>],
+        initial_state_mean=series.iloc[<span class="hljs-number">0</span>],
+        initial_state_covariance=<span class="hljs-number">1</span>,
+        observation_covariance=<span class="hljs-number">1</span>,
+        transition_covariance=<span class="hljs-number">0.01</span> <span class="hljs-comment"># 微调参数：越小则趋势越平滑</span>
+    )
+    
+    <span class="hljs-comment"># 可选：使用 EM 算法估计最佳噪声协方差</span>
+    <span class="hljs-comment"># kf = kf.em(series.values, n_iter=5)</span>
+    
+    <span class="hljs-comment"># 过滤数据</span>
+    state_means, _ = kf.<span class="hljs-built_in">filter</span>(series.values)
+    
+    <span class="hljs-comment"># &#x27;state_means&#x27; 是卡尔曼滤波对“已知”趋势的估计</span>
+    <span class="hljs-comment"># 创新项是实际值减去估计趋势</span>
+    innovations = series.values - state_means.flatten()
+    
+    <span class="hljs-keyword">return</span> pd.Series(innovations, index=series.index)
+
+<span class="hljs-comment"># 使用示例:</span>
+<span class="hljs-comment"># df[&#x27;kalman_innovation&#x27;] = extract_kalman_innovation(df[&#x27;raw_shipments&#x27;])</span>
+</div></code></pre>
+<hr>
+<h2 id="vi-normalizing-innovation-the-z-score-workflow">VI. Normalizing Innovation: The Z-Score Workflow</h2>
+<h2 id="六-创新归一化z-score-工作流">六、 创新归一化：Z-Score 工作流</h2>
+<p>To convert raw innovations into tradable signals, you must normalize them.
+为了将原始创新转化为可交易信号，必须对其进行归一化。</p>
+<h3 id="1-the-core-formula-rollingdynamic-z-score">1. The Core Formula (Rolling/Dynamic Z-score)</h3>
+<h3 id="1-核心公式滚动动态-z-score">1. 核心公式（滚动/动态 Z-score）</h3>
+<p>Because alternative data volatility regimes shift over time, a static Z-score is useless.
+由于另类数据的波动性状态会随时间变化，静态 Z-score 是无用的。
+$$Z_t = \frac{\epsilon_t - \mu_{\epsilon(t, w)}}{\sigma_{\epsilon(t, w)}}$$</p>
+<h3 id="2-cross-sectional-vs-time-series-z-scoring">2. Cross-Sectional vs. Time-Series Z-Scoring</h3>
+<h3 id="2-截面-vs-时间序列-z-score">2. 截面 vs. 时间序列 Z-Score</h3>
+<ul>
+<li><strong>Time-Series Z-Score (Self-Relative):</strong> Compares Target's innovation today against Target's own historical innovations. Excellent for directional, absolute-return trading.
+<ul>
+<li><strong>时间序列 Z-Score (自身相对)：</strong> 将目标公司今天的创新与其自身历史创新进行比较。非常适合方向性、绝对收益交易。</li>
+</ul>
+</li>
+<li><strong>Cross-Sectional Z-Score (Peer-Relative):</strong> At time $t$, calculates the Z-score of Target's innovation relative to the distribution of innovations across its peer group (e.g., Target vs. Walmart vs. Costco). This neutralizes sector-wide macro shocks and isolates idiosyncratic company alpha. Essential for Market-Neutral / Statistical Arbitrage strategies.
+<ul>
+<li><strong>截面 Z-Score (同业相对)：</strong> 在时间 $t$，计算目标公司创新相对于其同业群体（如 Target vs. 沃尔玛 vs. 好市多）创新分布的 Z-score。这可以中和行业范围内的宏观冲击，并隔离出公司特有的 Alpha。对于市场中性/统计套利策略至关重要。</li>
+<li><em>💡 Real-World Example:</em> Target has a Time-Series Z-score of $+1.5$ today (a solid positive surprise compared to its own history). However, you look at the Cross-Sectional Z-score for the Retail Sector, and Walmart, Costco, and Kroger are all at $+3.0$ due to a new government stimulus check. Cross-sectionally, Target is actually underperforming its peers and might be a <em>short</em> target in a pair trade.</li>
+<li><em>💡 现实案例：</em> Target 今天的时序 Z-score 为 +1.5（与其自身历史相比是稳健的正向惊喜）。然而，你观察零售行业的截面 Z-score，由于政府发放了新的刺激支票，沃尔玛、好市多和克罗格的 Z-score 都在 +3.0。从截面来看，Target 实际上表现不如同业，在配对交易中可能是一个<em>做空</em>目标。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-robust-z-scores-and-ewma-handling-fat-tails">3. Robust Z-scores and EWMA (Handling Fat Tails)</h3>
+<h3 id="3-稳健-z-score-与-ewma处理肥尾">3. 稳健 Z-score 与 EWMA（处理肥尾）</h3>
+<ul>
+<li><strong>Exponentially Weighted Moving Average (EWMA):</strong> Instead of a simple rolling window, calculate $\mu$ and $\sigma$ using EWMA ($\mu_t = \alpha x_t + (1-\alpha)\mu_{t-1}$) to make the Z-score react faster to new volatility regimes.
+<ul>
+<li><strong>指数加权移动平均 (EWMA)：</strong> 与其使用简单的滚动窗口，不如使用 EWMA 计算 $\mu$ 和 $\sigma$，使 Z-score 对新的波动状态反应更快。</li>
+</ul>
+</li>
+<li><strong>Median Absolute Deviation (MAD):</strong> Standard Z-scores are broken by massive outliers. Use MAD for a robust estimation:
+<ul>
+<li><strong>绝对中位差 (MAD)：</strong> 标准 Z-score 会被巨大的离群值破坏。使用 MAD 进行稳健估计：
+$$Z_{modified} = \frac{0.6745 \times (\epsilon_t - \text{Median})}{\text{MAD}}$$</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-python-implementation-rolling-robust-z-score">4. Python Implementation: Rolling Robust Z-Score</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">robust_zscore</span>(<span class="hljs-params">series, window=<span class="hljs-number">21</span></span>):
+    rolling_median = series.rolling(window=window).median()
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_mad</span>(<span class="hljs-params">x</span>):
+        <span class="hljs-keyword">return</span> np.median(np.<span class="hljs-built_in">abs</span>(x - np.median(x)))
+    rolling_mad = series.rolling(window=window).apply(get_mad, raw=<span class="hljs-literal">True</span>)
+    <span class="hljs-keyword">return</span> (<span class="hljs-number">0.6745</span> * (series - rolling_median)) / rolling_mad
+</div></code></pre>
+<hr>
+<h2 id="vii-summary-of-frequency--model-fit">VII. Summary of Frequency &amp; Model Fit</h2>
+<h2 id="七-频率与模型拟合总结">七、 频率与模型拟合总结</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Frequency (频率)</th>
+<th style="text-align:left">Recommended Framework (推荐框架)</th>
+<th style="text-align:left">Why? (原因)</th>
+<th style="text-align:left">Risk (风险)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Monthly (月度)</strong></td>
+<td style="text-align:left">X-13ARIMA-SEATS</td>
+<td style="text-align:left">Best-in-class for Trading Day adjustment. (交易日调整的最优方案)</td>
+<td style="text-align:left">High setup complexity. (配置复杂)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Weekly (周度)</strong></td>
+<td style="text-align:left">Prophet</td>
+<td style="text-align:left">Handles &quot;53rd week&quot; and holiday drift natively. (原生处理第 53 周和假日漂移)</td>
+<td style="text-align:left">Can over-smooth signals. (可能过度平滑信号)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Daily (日度)</strong></td>
+<td style="text-align:left">MSTL or Prophet</td>
+<td style="text-align:left">Decomposes Weekly + Yearly cycles. (分解周周期 + 年周期)</td>
+<td style="text-align:left">High computational cost. (计算成本高)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Sparse (稀疏)</strong></td>
+<td style="text-align:left">Prophet</td>
+<td style="text-align:left">Robust to irregular sampling and gaps. (对不规则采样和缺失值稳健)</td>
+<td style="text-align:left">High risk of over-fitting noise. (过拟合噪声的风险高)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Real-Time (实时)</strong></td>
+<td style="text-align:left">Kalman Filter</td>
+<td style="text-align:left">Recursive/Online extraction of Innovations. (递归/在线提取创新项)</td>
+<td style="text-align:left">Requires precise state-space tuning. (需要精确的状态空间微调)</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>
